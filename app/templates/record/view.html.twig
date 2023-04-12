@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title.record_view'|trans({'%id%': record.id|default()}) }}
+{% endblock %}
+
+{% block body %}
+    <h1>View record</h1>
+    {% if record is defined and record|length %}
+        <dl>
+            <dt>Title</dt>
+            <dd>{{ record.title }}</dd>
+            <dt>Content</dt>
+            <dd>{{ record.content }}</dd>
+            <dt>Tags</dt>
+            <dd>{{ record.tags|join(', ') }}</dd>
+        </dl>
+    {% else %}
+        <p>
+            Record not found.
+        </p>
+    {% endif %}
+    <p>
+        <a href="{{ url('record_index') }}" title="back to the list">back to the list</a>
+    </p>
+{% endblock %}
