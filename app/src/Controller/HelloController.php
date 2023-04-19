@@ -26,7 +26,6 @@ class HelloController extends AbstractController
     #[Route(
         '/{name}',
         name: 'hello_index',
-        requirements: ['name' => '[a-zA-Z]+'],
         defaults: ['name' => 'World'],
         methods: 'GET'
     )]
