@@ -62,6 +62,9 @@
             ".php-cs-fixer.dist.php"
         ]
     },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v5.9.0"
+    },
     "phpunit/phpunit": {
         "version": "9.6",
         "recipe": {

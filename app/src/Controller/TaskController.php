@@ -1,42 +1,65 @@
 <?php
+/**
+ * Task controller.
+ */
 
 namespace App\Controller;
 
-use App\Repository\RecordRepository;
+use App\Entity\Task;
 use App\Repository\TaskRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
-#[Route('task')]
+/**
+ * Class TaskController.
+ */
+#[Route('/task')]
 class TaskController extends AbstractController
 {
-
-    private TaskRepository $repository;
-
     /**
-     * @param TaskRepository $repository
+     * Index action.
+     *
+     * @param Request            $request        HTTP Request
+     * @param TaskRepository     $taskRepository Task repository
+     * @param PaginatorInterface $paginator      Paginator
+     *
+     * @return Response HTTP response
      */
-    public function __construct(TaskRepository $repository)
+    #[Route(name: 'task_index', methods: 'GET')]
+    public function index(Request $request, TaskRepository $taskRepository, PaginatorInterface $paginator): Response
     {
-        $this->repository = $repository;
+        $pagination = $paginator->paginate(
+            $taskRepository->queryAll(),
+            $request->query->getInt('page', 1),
+            TaskRepository::PAGINATOR_ITEMS_PER_PAGE
+        );
+
+        dump($pagination);
+
+        return $this->render('task/index.html.twig', ['pagination' => $pagination]);
     }
 
-
+    /**
+     * Show action.
+     *
+     * @param Task $task Task entity
+     *
+     * @return Response HTTP response
+     */
     #[Route(
-        '',
-        name: 'task_index',
-        methods: 'GET'
+        '/{id}',
+        name: 'task_show',
+        requirements: ['id' => '[1-9]\d*'],
+        methods: 'GET',
     )]
-    public function index():Response
+    public function show(Task $task): Response
     {
-        //return new Response('Index Action');
-        $tasks = $this->repository->findAll();
-
         return $this->render(
-            'task/index.html.twig',
-            ['tasks'=>$tasks]
+            'task/show.html.twig',
+            ['task' => $task]
         );
     }
 }
